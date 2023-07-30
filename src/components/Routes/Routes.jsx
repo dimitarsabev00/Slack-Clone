@@ -1,10 +1,11 @@
 /* eslint-disable react/prop-types */
 import { Route, Routes } from "react-router";
+import Header from "../Header";
 
 const RoutesComp = () => {
   return (
     <Routes>
-      <Route path="/" element={<h1>This is home page</h1>} />
+      <Route path="/" element={<Header />} />
     </Routes>
   );
 };
