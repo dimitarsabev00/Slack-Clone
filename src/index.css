@@ -1,0 +1,10 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  --header-slack-background-color: #131116;
+  --sideBar-slack-background-color: #18171c;
+  --renderContent-slack-background-color: #1a1c21;
+  overflow: hidden;
+}
