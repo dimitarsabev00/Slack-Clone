@@ -1,9 +1,21 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
-
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../configs/firebase";
 const SidebarOption = ({ Icon, title, addChannelOption }) => {
+  const addChannel = () => {
+    const channelName = prompt("Please enter the channel name");
+
+    if (channelName) {
+      const roomRef = collection(db, "rooms");
+      addDoc(roomRef, { name: channelName });
+    }
+  };
+  const selectChannel = () => {};
   return (
-    <SidebarOptionContainer>
+    <SidebarOptionContainer
+      onClick={addChannelOption ? addChannel : selectChannel}
+    >
       {Icon && (
         <Icon
           fontSize="small"
@@ -42,4 +54,7 @@ const SidebarOptionContainer = styled.div`
     padding: 15px;
   }
 `;
-const SidebarOptionChannel = styled.div``;
+const SidebarOptionChannel = styled.h3`
+  padding: 10px 0;
+  font-weight: 300;
+`;
