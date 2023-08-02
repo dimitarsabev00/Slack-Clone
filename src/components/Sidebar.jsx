@@ -19,7 +19,7 @@ import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 import { db } from "../configs/firebase";
 const Sidebar = () => {
-  const [channels, loading, error] = useCollection(collection(db, "rooms"));
+  const [channels, loading, error] = useCollection(collection(db, "channels"));
   return (
     <SidebarContainer>
       <SidebarHeader>
@@ -42,7 +42,7 @@ const Sidebar = () => {
       <hr />
       <SidebarOption Icon={Add} addChannelOption title={"Add channels"} />
       {channels?.docs?.map((doc) => (
-        <SidebarOption key={doc?.id} title={doc?.data()?.name} />
+        <SidebarOption key={doc?.id} id={doc?.id} title={doc?.data()?.name} />
       ))}
     </SidebarContainer>
   );

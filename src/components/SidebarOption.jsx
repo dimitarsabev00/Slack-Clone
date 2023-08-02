@@ -2,13 +2,12 @@
 import styled from "styled-components";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../configs/firebase";
-const SidebarOption = ({ Icon, title, addChannelOption }) => {
+const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
   const addChannel = () => {
     const channelName = prompt("Please enter the channel name");
 
     if (channelName) {
-      const roomRef = collection(db, "rooms");
-      addDoc(roomRef, { name: channelName });
+      addDoc(collection(db, "channels"), { name: channelName });
     }
   };
   const selectChannel = () => {};
