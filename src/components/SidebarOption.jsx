@@ -2,7 +2,10 @@
 import styled from "styled-components";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../configs/firebase";
+import { useDispatch } from "react-redux";
+import { enterRoom } from "../store/slices/generalSlice";
 const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
+  const dispatch = useDispatch();
   const addChannel = () => {
     const channelName = prompt("Please enter the channel name");
 
@@ -10,7 +13,11 @@ const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
       addDoc(collection(db, "channels"), { name: channelName });
     }
   };
-  const selectChannel = () => {};
+  const selectChannel = () => {
+    if (id) {
+      dispatch(enterRoom({ channelId: id }));
+    }
+  };
   return (
     <SidebarOptionContainer
       onClick={addChannelOption ? addChannel : selectChannel}
