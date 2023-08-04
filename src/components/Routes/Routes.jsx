@@ -1,6 +1,7 @@
 /* eslint-disable react/prop-types */
 import { Route, Routes } from "react-router";
 import styled from "styled-components";
+import Chat from "../Chat";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 
@@ -11,8 +12,7 @@ const RoutesComp = () => {
       <AppBody>
         <Sidebar />
         <Routes>
-          <Route path="/" element={<></>} />
-          {/* Chat */}
+          <Route path="/" exact element={<Chat />} />
         </Routes>
       </AppBody>
     </>
