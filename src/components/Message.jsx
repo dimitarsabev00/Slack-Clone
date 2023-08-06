@@ -4,7 +4,7 @@ import styled from "styled-components";
 const Message = ({ message, createdAt, user }) => {
   return (
     <MessageContainer>
-      <img src="" alt="" />
+      <img src={user?.avatar} alt="" />
       <MessageInfo>
         <h4>
           {user?.name} <span>{createdAt}</span>
