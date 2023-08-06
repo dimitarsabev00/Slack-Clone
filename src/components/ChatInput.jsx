@@ -4,14 +4,17 @@ import { Button } from "@mui/material";
 import { addDoc, collection } from "firebase/firestore";
 import moment from "moment";
 import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
-import { db } from "../configs/firebase";
+import { auth, db } from "../configs/firebase";
 
 const ChatInput = ({ channelName, channelId, chatRef }) => {
+  const [user] = useAuthState(auth);
+
   const [input, setInput] = useState("");
   const sendMessage = (e) => {
     e.preventDefault();
-    if (!channelId) {
+    if (!channelId || !input) {
       return false;
     }
 
@@ -19,8 +22,8 @@ const ChatInput = ({ channelName, channelId, chatRef }) => {
       message: input,
       createdAt: moment().format("DD.MM.YYYY"),
       user: {
-        name: "testName",
-        avatar: "here url for avatar",
+        name: user?.displayName,
+        avatar: user?.photoURL,
       },
     })
       .then((docRef) => {
