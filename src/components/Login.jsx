@@ -23,8 +23,7 @@ const Login = () => {
           src="https://cdn.mos.cms.futurecdn.net/SDDw7CnuoUGax6x9mTo7dd.jpg"
           alt=""
         />
-        <h1>Sign in to Slack</h1>
-        <p>cloneSlack.slack.com</p>
+        <h1>Sign in to Slack Clone</h1>
         <Button onClick={signIn}>Sign in with Google</Button>
       </LoginInnerContainer>
     </LoginContainer>
