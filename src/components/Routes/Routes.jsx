@@ -5,7 +5,7 @@ import Chat from "../Chat";
 import Header from "../Header";
 import Sidebar from "../Sidebar";
 import { useAuthState } from "react-firebase-hooks/auth";
-import Login from "../Login";
+import Auth from "../Auth";
 import { auth } from "../../configs/firebase";
 import Spinner from "react-spinkit";
 const RoutesComp = () => {
@@ -25,7 +25,7 @@ const RoutesComp = () => {
   return (
     <>
       {!user ? (
-        <Login />
+        <Auth />
       ) : (
         <>
           <Header />
