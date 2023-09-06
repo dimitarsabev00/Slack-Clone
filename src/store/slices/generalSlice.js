@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithRedirect,
+  updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../../configs/firebase";
 import {
@@ -70,6 +71,10 @@ export const signUpWithEmailAndPassword =
         payload?.userState?.email,
         payload?.userState?.password
       );
+      await updateProfile(user, {
+        displayName: payload?.userState.username,
+        photoURL: `https://static.vecteezy.com/system/resources/previews/001/840/618/original/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg`
+    });
       await addDoc(collection(db, "users"), {
         username: payload?.userState?.username,
         email: payload?.userState?.email,
