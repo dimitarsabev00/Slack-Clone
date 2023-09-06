@@ -7,7 +7,7 @@ const Message = ({ message, createdAt, user }) => {
       <img src={user?.avatar} alt="" />
       <MessageInfo>
         <h4>
-          {user?.name} <span>{createdAt}</span>
+          {user?.username} <span>{createdAt}</span>
         </h4>
         <p>{message}</p>
       </MessageInfo>

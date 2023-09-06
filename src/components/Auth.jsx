@@ -3,21 +3,43 @@ import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import styled from "styled-components";
 import { auth } from "../configs/firebase";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+import {
+  loginUserWithGoogle,
+  signInUserWithEmailAndPassword,
+  signUpWithEmailAndPassword,
+} from "../store/slices/generalSlice";
 
 const Auth = () => {
+  const [userState, setUserState] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+  });
+  const [errorState, setErrorState] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
   const [authState, setAuthState] = useState("login");
-  const signInWithGoogle = async (e) => {
-    e.preventDefault();
-    const googleProvider = new GoogleAuthProvider();
-    try {
-      const result = await signInWithPopup(auth, googleProvider);
-      // Google sign-in successful. You can get the user information from the result object.
-      const user = result.user;
-      console.log("Logged in user:", user);
-    } catch (error) {
-      alert(error.message);
+  const dispatch = useDispatch();
+
+  const checkPassword = () => {
+    if (userState?.password?.length < 8) {
+      setErrorState((error) =>
+        error.concat({ message: "Password length should be greater than 8" })
+      );
+      return false;
+    } else if (userState?.password !== userState?.confirmPassword) {
+      setErrorState((error) =>
+        error.concat({
+          message: "Password and Confirm Password does not match",
+        })
+      );
+      return false;
     }
+    return true;
   };
+
   return (
     <Container>
       {authState === "login" ? (
@@ -28,7 +50,19 @@ const Auth = () => {
           />
           <h1>Sign in to Slack</h1>
           <p>We suggest using the email address you use at work.</p>
-          <Button onClick={signInWithGoogle}>Sign in With Google</Button>
+          <Button
+            onClick={() => {
+              dispatch(
+                loginUserWithGoogle({
+                  onSuccess: () => {
+                    toast.success("Success Login With Google!");
+                  },
+                })
+              );
+            }}
+          >
+            Sign in With Google
+          </Button>
           <OrContainer>
             <OrLine />
             <OrText>OR</OrText>
@@ -41,15 +75,43 @@ const Auth = () => {
               marginTop: "1rem",
             }}
           >
-            <TextField label="Email" variant="standard" />
+            <TextField
+              label="Email"
+              variant="standard"
+              value={userState?.email}
+              onChange={(e) => {
+                setUserState((prev) => ({ ...prev, email: e.target.value }));
+              }}
+            />
             <TextField
               label="Password"
               variant="standard"
               style={{ marginTop: "1rem" }}
+              value={userState?.password}
+              onChange={(e) => {
+                setUserState((prev) => ({ ...prev, password: e.target.value }));
+              }}
+              type="password"
             />
           </div>
           <ButtonsContainer>
-            <Button onClick={() => {}} className="signInWithEmail">Sign In With Email</Button>
+            <Button
+              onClick={() => {
+                dispatch(
+                  signInUserWithEmailAndPassword({
+                    payload: {
+                      userState,
+                    },
+                    onSuccess: () => {
+                      toast.success("Success Login!");
+                    },
+                  })
+                );
+              }}
+              className="signInWithEmail"
+            >
+              Sign In With Email
+            </Button>
             <p>
               New to Slack?{" "}
               <span
@@ -79,15 +141,63 @@ const Auth = () => {
               marginTop: "1rem",
             }}
           >
-            <TextField label="Email" variant="standard" />
+            <TextField
+              label="Username"
+              variant="standard"
+              onChange={(e) => {
+                setUserState((prev) => ({ ...prev, username: e.target.value }));
+              }}
+              value={userState?.username}
+            />
+            <TextField
+              label="Email"
+              variant="standard"
+              style={{ marginTop: "1rem" }}
+              onChange={(e) => {
+                setUserState((prev) => ({ ...prev, email: e.target.value }));
+              }}
+              value={userState?.email}
+            />
             <TextField
               label="Password"
               variant="standard"
               style={{ marginTop: "1rem" }}
+              onChange={(e) => {
+                setUserState((prev) => ({ ...prev, password: e.target.value }));
+              }}
+              value={userState?.password}
+              type="password"
+            />
+            <TextField
+              label="Confirm Password"
+              variant="standard"
+              style={{ marginTop: "1rem" }}
+              onChange={(e) => {
+                setUserState((prev) => ({
+                  ...prev,
+                  confirmPassword: e.target.value,
+                }));
+              }}
+              value={userState?.confirmPassword}
+              type="password"
             />
           </div>
           <ButtonsContainer>
-            <Button onClick={() => {}} className="signInWithEmail">
+            <Button
+              onClick={() => {
+                dispatch(
+                  signUpWithEmailAndPassword({
+                    payload: {
+                      userState,
+                    },
+                    onSuccess: () => {
+                      toast.success("Account Created!");
+                    },
+                  })
+                );
+              }}
+              className="signInWithEmail"
+            >
               Sign Up
             </Button>
             <OrContainer>
@@ -96,7 +206,15 @@ const Auth = () => {
               <OrLine />
             </OrContainer>
             <Button
-              onClick={signInWithGoogle}
+              onClick={() => {
+                dispatch(
+                  loginUserWithGoogle({
+                    onSuccess: () => {
+                      toast.success("Success Login With Google!");
+                    },
+                  })
+                );
+              }}
               style={{
                 marginTop: "10px",
                 textTransform: "none",
@@ -129,13 +247,13 @@ const Auth = () => {
 
 export default Auth;
 const Container = styled.div`
-background-color:'#f8f8f8'
-height: 100vh;
-display:flex;
-justify-content: center;
-margin-top:5rem;
+  background-color: #f8f8f8;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
 `;
 const InnerContainer = styled.div`
+  margin: 20px 0px;
   padding: 100px;
   text-align: center;
   background-color: white;
@@ -153,10 +271,10 @@ const InnerContainer = styled.div`
     border: 2px solid gray;
     color: black;
     width: 100%;
-  }
-  > button:hover {
-    background-color: #fff;
-    box-shadow: 0 1px 4px #0000004d;
+    &:hover {
+      background-color: #fff;
+      box-shadow: 0 1px 4px #0000004d;
+    }
   }
 `;
 const ButtonsContainer = styled.div`
@@ -168,6 +286,10 @@ const ButtonsContainer = styled.div`
     text-transform: inherit !important;
     background-color: #1976d2 !important;
     color: white;
+    &:hover {
+      background-color: #4986c2 !important;
+      box-shadow: 0 1px 4px #0000004d;
+    }
   }
 `;
 const OrContainer = styled.div`

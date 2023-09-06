@@ -7,9 +7,11 @@ import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import styled from "styled-components";
 import { auth, db } from "../configs/firebase";
+import { useSelector } from "react-redux";
 
 const ChatInput = ({ channelName, channelId, chatRef }) => {
   const [user] = useAuthState(auth);
+  const currentUser = useSelector(({ generalSlice }) => generalSlice.user);
 
   const [input, setInput] = useState("");
   const sendMessage = (e) => {
@@ -22,8 +24,8 @@ const ChatInput = ({ channelName, channelId, chatRef }) => {
       message: input,
       createdAt: moment().format("DD.MM.YYYY"),
       user: {
-        name: user?.displayName,
-        avatar: user?.photoURL,
+        username: user?.displayName ? user?.displayName : currentUser?.[0]?.username ,
+        avatar: user?.avatar ? user?.avatar : currentUser?.[0]?.avatar,
       },
     })
       .then((docRef) => {
