@@ -2,10 +2,12 @@
 import styled from "styled-components";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../configs/firebase";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { enterRoom } from "../store/slices/generalSlice";
 const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
   const dispatch = useDispatch();
+  const channelId = useSelector(({ generalSlice }) => generalSlice.channelId);
+
   const addChannel = () => {
     const channelName = prompt("Please enter the channel name");
 
@@ -21,6 +23,7 @@ const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
   return (
     <SidebarOptionContainer
       onClick={addChannelOption ? addChannel : selectChannel}
+      style={{ backgroundColor: `${id === channelId ? "#343636" : "#18181C"}` }}
     >
       {Icon && (
         <Icon
@@ -51,8 +54,9 @@ const SidebarOptionContainer = styled.div`
   cursor: pointer;
   :hover {
     opacity: 0.9;
-    background-color: #340w36;
+    background-color: #343636;
   }
+
   > h3 {
     font-weight: 500;
   }
