@@ -25,7 +25,9 @@ const RoutesComp = () => {
   return (
     <>
       {!user ? (
-        <Auth />
+        <Routes>
+          <Route path="/auth" exact element={<Auth />} />
+        </Routes>
       ) : (
         <>
           <Header />

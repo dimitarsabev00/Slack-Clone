@@ -3,10 +3,12 @@ import { AccessTime, Search, HelpOutline } from "@mui/icons-material";
 import styled from "styled-components";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { auth } from "../configs/firebase";
-import { signOut } from "firebase/auth";
+import { logout } from "../store/slices/generalSlice";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 const Header = () => {
   const [user] = useAuthState(auth);
-
+  const dispatch = useDispatch();
   return (
     <HeaderContainer>
       <HeaderLeft>
@@ -21,7 +23,15 @@ const Header = () => {
         <HeaderAvatar
           src={user?.photoURL}
           alt={user?.displayName}
-          onClick={() => signOut(auth)}
+          onClick={() => {
+            dispatch(
+              logout({
+                onSuccess: () => {
+                  toast.success("Success Logout!");
+                },
+              })
+            );
+          }}
         />
       </HeaderRight>
     </HeaderContainer>

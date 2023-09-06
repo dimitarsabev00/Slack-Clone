@@ -4,6 +4,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signInWithRedirect,
+  signOut,
   updateProfile,
 } from "firebase/auth";
 import { auth, db } from "../../configs/firebase";
@@ -127,4 +128,15 @@ export const checkUser = () => async (dispatch) => {
     dispatch(setGeneralFields({ user: result }));
   });
 };
+export const logout =
+  ({ onSuccess }) =>
+  async (dispatch) => {
+    await signOut(auth);
+    window.localStorage.clear();
+    dispatch(setGeneralFields({ user: null }));
+    window.location.href = "/auth";
+    if (onSuccess) {
+      onSuccess();
+    }
+  };
 export default generalSlice.reducer;
