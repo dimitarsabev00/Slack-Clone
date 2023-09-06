@@ -14,11 +14,14 @@ const SidebarOption = ({
   const dispatch = useDispatch();
   const channelId = useSelector(({ generalSlice }) => generalSlice.channelId);
 
-  const addChannel = () => {
+  const addChannel = async () => {
     const channelName = prompt("Please enter the channel name");
 
     if (channelName) {
-      addDoc(collection(db, "channels"), { name: channelName });
+      const { id } = await addDoc(collection(db, "channels"), {
+        name: channelName,
+      });
+      dispatch(enterRoom({ channelId: id }));
     }
   };
   const selectChannel = () => {
