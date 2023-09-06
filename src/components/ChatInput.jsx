@@ -16,10 +16,9 @@ const ChatInput = ({ channelName, channelId, chatRef }) => {
     if (!channelId || !input) {
       return false;
     }
-
     addDoc(collection(db, "channels", channelId, "messages"), {
       message: input,
-      createdAt: moment().format("DD.MM.YYYY"),
+      createdAt: moment().toDate(),
       user: {
         username: user?.displayName,
         avatar: user?.photoURL,

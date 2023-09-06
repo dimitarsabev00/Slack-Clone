@@ -49,7 +49,6 @@ const Chat = () => {
           <ChatMessages>
             {channelMessages?.docs?.map((doc) => {
               const { message, createdAt, user } = doc?.data();
-              console.log('user in message',user)
               return (
                 <Message
                   key={doc?.id}

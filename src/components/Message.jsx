@@ -1,13 +1,18 @@
 /* eslint-disable react/prop-types */
 import styled from "styled-components";
+import TimeAgo from "javascript-time-ago";
+import en from "javascript-time-ago/locale/en";
 
 const Message = ({ message, createdAt, user }) => {
+  TimeAgo.addDefaultLocale(en);
+  const timeAgo = new TimeAgo("en-US");
+  const jsDate = new Date(createdAt.seconds * 1000);
   return (
     <MessageContainer>
       <img src={user?.avatar} alt="" />
       <MessageInfo>
         <h4>
-          {user?.username} <span>{createdAt}</span>
+          {user?.username} <span>{timeAgo.format(jsDate)}</span>
         </h4>
         <p>{message}</p>
       </MessageInfo>
