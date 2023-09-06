@@ -12,14 +12,23 @@ import {
   QuestionAnswer,
   Send,
 } from "@mui/icons-material";
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import SidebarOption from "./SidebarOption";
 import { useCollection } from "react-firebase-hooks/firestore";
 import { collection } from "firebase/firestore";
 import { db } from "../configs/firebase";
+import { useDispatch } from "react-redux";
+import { enterRoom } from "../store/slices/generalSlice";
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const [channels, loading, error] = useCollection(collection(db, "channels"));
+  useEffect(() => {
+    if (channels?.docs.length > 0) {
+      dispatch(enterRoom({ channelId: channels?.docs?.[0]?.id }));
+    }
+  }, [channels?.docs]);
+
   return (
     <SidebarContainer>
       <SidebarHeader>
