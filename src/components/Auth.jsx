@@ -1,7 +1,5 @@
-import { Button, Input, TextField } from "@mui/material";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { Button, TextField } from "@mui/material";
 import styled from "styled-components";
-import { auth } from "../configs/firebase";
 import { useState } from "react";
 import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
@@ -18,27 +16,8 @@ const Auth = () => {
     password: "",
     confirmPassword: "",
   });
-  const [errorState, setErrorState] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [authState, setAuthState] = useState("login");
   const dispatch = useDispatch();
-
-  const checkPassword = () => {
-    if (userState?.password?.length < 8) {
-      setErrorState((error) =>
-        error.concat({ message: "Password length should be greater than 8" })
-      );
-      return false;
-    } else if (userState?.password !== userState?.confirmPassword) {
-      setErrorState((error) =>
-        error.concat({
-          message: "Password and Confirm Password does not match",
-        })
-      );
-      return false;
-    }
-    return true;
-  };
 
   return (
     <Container>
