@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
 import { Route, Routes } from "react-router";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import Chat from "../Chat";
 import Header from "../Header";
@@ -8,9 +9,13 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import Auth from "../Auth";
 import { auth } from "../../configs/firebase";
 import Spinner from "react-spinkit";
+import { useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { setGeneralFields } from "../../store/slices/generalSlice";
 const RoutesComp = () => {
   const [user, loading] = useAuthState(auth);
-
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   if (loading) {
     <AppLoading>
       <AppLoadingContents>
@@ -22,11 +27,25 @@ const RoutesComp = () => {
       </AppLoadingContents>
     </AppLoading>;
   }
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(setGeneralFields({ user }));
+        navigate("/");
+      } else {
+        dispatch(setGeneralFields({ user: {} }));
+
+        navigate("/auth");
+      }
+    });
+  }, []);
 
   return (
     <>
       {!user ? (
-        <Auth />
+        <Routes>
+          <Route path="/auth" exact element={<Auth />} />
+        </Routes>
       ) : (
         <>
           <Header />

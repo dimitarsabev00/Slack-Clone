@@ -85,7 +85,6 @@ export const signUpWithEmailAndPassword =
       window.localStorage.clear();
       localStorage.setItem("token", user?.accessToken);
       localStorage.setItem("currentUserEmail", user?.email);
-      dispatch(checkUser());
       if (onSuccess) {
         onSuccess();
       }
@@ -106,7 +105,6 @@ export const signInUserWithEmailAndPassword =
       window.localStorage.clear();
       localStorage.setItem("token", user?.accessToken);
       localStorage.setItem("currentUserEmail", user?.email);
-      dispatch(checkUser());
       if (onSuccess) {
         onSuccess();
       }
@@ -115,26 +113,12 @@ export const signInUserWithEmailAndPassword =
       toast.error("Please Check your Credentials");
     }
   };
-export const checkUser = () => async (dispatch) => {
-  const currentUserEmail = localStorage.getItem("currentUserEmail");
-  onSnapshot(collection(db, "users"), (snapshot) => {
-    const result = snapshot.docs
-      .map((doc) => {
-        return { ...doc.data(), userID: doc?.id };
-      })
-      .filter((item) => {
-        return item.email === currentUserEmail;
-      });
-    dispatch(setGeneralFields({ user: result }));
-  });
-};
 export const logout =
   ({ onSuccess }) =>
   async (dispatch) => {
     await signOut(auth);
     window.localStorage.clear();
     dispatch(setGeneralFields({ user: null }));
-    window.location.href = "/";
     if (onSuccess) {
       onSuccess();
     }
