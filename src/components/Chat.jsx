@@ -1,7 +1,7 @@
 /* eslint-disable no-unsafe-optional-chaining */
 import { InfoOutlined } from "@mui/icons-material";
 import { collection, doc, getDoc, orderBy, query } from "firebase/firestore";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useCollection, useDocument } from "react-firebase-hooks/firestore";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
@@ -10,6 +10,8 @@ import ChatInput from "./ChatInput";
 import Message from "./Message";
 
 const Chat = () => {
+  const [showDetails, setShowDetails] = useState(false);
+
   const chatRef = useRef(null);
   const channelId = useSelector(({ generalSlice }) => generalSlice.channelId);
   const [channelDetails, loading, error] = useDocument(
@@ -28,6 +30,16 @@ const Chat = () => {
       behavior: "smooth",
     });
   }, [channelId, loadingMessages]);
+  const usersCountInOneChannel = () => {
+    const usersCount = channelMessages?.docs?.reduce((acc, message) => {
+      if (!acc.includes(message?.data()?.user?.username)) {
+        acc.push(message?.data()?.user?.username);
+      }
+      return acc;
+    }, []);
+
+    return usersCount.length;
+  };
 
   return (
     <ChatContainer>
@@ -40,9 +52,36 @@ const Chat = () => {
               </h4>
             </ChatHeaderLeft>
             <ChatHeaderRight>
-              <p>
-                <InfoOutlined /> Details
-              </p>
+              <div
+                onMouseEnter={() => {
+                  setShowDetails(true);
+                }}
+                onMouseLeave={() => {
+                  setShowDetails(false);
+                }}
+                style={{
+                  position: "relative",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <InfoOutlined /> <p>Details</p>
+                {showDetails && (
+                  <div
+                    style={{
+                      position: "absolute",
+                      top: "100%",
+                      left: "-15px",
+                      backgroundColor: "white",
+                      border: "1px solid #ccc",
+                      padding: "10px",
+                    }}
+                  >
+                    <p>Users: {usersCountInOneChannel()}</p>
+                  </div>
+                )}
+              </div>
             </ChatHeaderRight>
           </ChatHeader>
 
