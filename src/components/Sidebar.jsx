@@ -12,7 +12,7 @@ import {
   QuestionAnswer,
   Send,
 } from "@mui/icons-material";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import SidebarOption from "./SidebarOption";
 import { useCollection } from "react-firebase-hooks/firestore";
@@ -22,6 +22,7 @@ import { useDispatch } from "react-redux";
 import { enterRoom } from "../store/slices/generalSlice";
 const Sidebar = () => {
   const dispatch = useDispatch();
+  const [showChannels, setShowChannels] = useState(true);
   const [channels, loading, error] = useCollection(collection(db, "channels"));
   useEffect(() => {
     if (channels?.docs.length > 0) {
@@ -47,11 +48,26 @@ const Sidebar = () => {
       <SidebarOption Icon={Apps} title={"Apps"} />
       <SidebarOption Icon={ExpandLess} title={"Show less"} />
       <hr />
-      <SidebarOption Icon={ExpandMore} title={"Channels"} />
-      <hr />
-      {channels?.docs?.map((doc) => (
-        <SidebarOption key={doc?.id} id={doc?.id} title={doc?.data()?.name} />
-      ))}
+      <SidebarOption
+        Icon={showChannels ? ExpandMore : ExpandLess}
+        title={"Channels"}
+        setShowChannels={() => {
+          setShowChannels((prev) => !prev);
+        }}
+      />
+      {showChannels && (
+        <>
+          <hr />
+          {channels?.docs?.map((doc) => (
+            <SidebarOption
+              key={doc?.id}
+              id={doc?.id}
+              title={doc?.data()?.name}
+            />
+          ))}
+        </>
+      )}
+
       <SidebarOption Icon={Add} addChannelOption title={"Add channels"} />
     </SidebarContainer>
   );

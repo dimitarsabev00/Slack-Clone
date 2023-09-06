@@ -4,7 +4,13 @@ import { collection, addDoc } from "firebase/firestore";
 import { db } from "../configs/firebase";
 import { useDispatch, useSelector } from "react-redux";
 import { enterRoom } from "../store/slices/generalSlice";
-const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
+const SidebarOption = ({
+  Icon,
+  title,
+  setShowChannels,
+  addChannelOption,
+  id,
+}) => {
   const dispatch = useDispatch();
   const channelId = useSelector(({ generalSlice }) => generalSlice.channelId);
 
@@ -20,9 +26,16 @@ const SidebarOption = ({ Icon, title, addChannelOption, id }) => {
       dispatch(enterRoom({ channelId: id }));
     }
   };
+
   return (
     <SidebarOptionContainer
-      onClick={addChannelOption ? addChannel : selectChannel}
+      onClick={
+        addChannelOption
+          ? addChannel
+          : setShowChannels
+          ? setShowChannels
+          : selectChannel
+      }
       style={{ backgroundColor: `${id === channelId ? "#343636" : "#18181C"}` }}
     >
       {Icon && (
