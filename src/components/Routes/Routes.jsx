@@ -22,12 +22,11 @@ const RoutesComp = () => {
       </AppLoadingContents>
     </AppLoading>;
   }
+
   return (
     <>
       {!user ? (
-        <Routes>
-          <Route path="/auth" exact element={<Auth />} />
-        </Routes>
+        <Auth />
       ) : (
         <>
           <Header />

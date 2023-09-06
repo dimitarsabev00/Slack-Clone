@@ -74,8 +74,8 @@ export const signUpWithEmailAndPassword =
       );
       await updateProfile(user, {
         displayName: payload?.userState.username,
-        photoURL: `https://static.vecteezy.com/system/resources/previews/001/840/618/original/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg`
-    });
+        photoURL: `https://static.vecteezy.com/system/resources/previews/001/840/618/original/picture-profile-icon-male-icon-human-or-people-sign-and-symbol-free-vector.jpg`,
+      });
       await addDoc(collection(db, "users"), {
         username: payload?.userState?.username,
         email: payload?.userState?.email,
@@ -134,7 +134,7 @@ export const logout =
     await signOut(auth);
     window.localStorage.clear();
     dispatch(setGeneralFields({ user: null }));
-    window.location.href = "/auth";
+    window.location.href = "/";
     if (onSuccess) {
       onSuccess();
     }
